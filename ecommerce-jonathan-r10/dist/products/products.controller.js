@@ -26,7 +26,7 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Array)
 ], ProductsController.prototype, "getAllProducts", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),

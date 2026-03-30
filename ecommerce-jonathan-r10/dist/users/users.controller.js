@@ -26,7 +26,7 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
+    __metadata("design:returntype", Array)
 ], UsersController.prototype, "getAllUsers", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
