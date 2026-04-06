@@ -14,6 +14,10 @@ const users_module_1 = require("./users/users.module");
 const products_module_1 = require("./products/products.module");
 const auth_module_1 = require("./auth/auth.module");
 const logger_middleware_1 = require("./middlewares/logger.middleware");
+const config_1 = require("@nestjs/config");
+const typeorm_1 = require("./config/typeorm");
+const typeorm_2 = require("@nestjs/typeorm");
+const categories_module_1 = require("./categories/categories.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes('*');
@@ -22,7 +26,20 @@ let AppModule = class AppModule {
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [users_module_1.UsersModule, products_module_1.ProductsModule, auth_module_1.AuthModule],
+        imports: [
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+                load: [typeorm_1.typeOrmConfig],
+            }),
+            typeorm_2.TypeOrmModule.forRootAsync({
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => configService.get('typeorm'),
+            }),
+            users_module_1.UsersModule,
+            products_module_1.ProductsModule,
+            auth_module_1.AuthModule,
+            categories_module_1.CategoriesModule,
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

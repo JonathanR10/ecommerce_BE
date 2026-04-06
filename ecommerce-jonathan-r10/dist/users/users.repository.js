@@ -161,8 +161,38 @@ const users = [
     },
 ];
 let UsersRepository = class UsersRepository {
-    getAllUsers() {
-        return users;
+    getAllUsers(page, limit) {
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        const userList = users.slice(start, end);
+        return userList;
+    }
+    getUserById(id) {
+        const foundUser = users.find((user) => user.id === id);
+        if (!foundUser)
+            return `No se encontró al usuario con el id = ${id}`;
+        return foundUser;
+    }
+    getUserByEmail(email) {
+        return users.find((user) => user.email === email);
+    }
+    addUser(newUser) {
+        users.push({ ...newUser, id: newUser.email });
+        return newUser.email;
+    }
+    updateUser(id, userNewData) {
+        const foundUser = users.find((user) => user.id === id);
+        if (!foundUser)
+            return `No se encontró al usuario con el id = ${id}`;
+        Object.assign(foundUser, userNewData);
+        return foundUser.id;
+    }
+    deleteuser(id) {
+        const foundIndex = users.findIndex((user) => user.id === id);
+        if (foundIndex === -1)
+            return `No se encontró al usuario con el id = ${id} `;
+        users.splice(foundIndex, 1);
+        return id;
     }
 };
 exports.UsersRepository = UsersRepository;

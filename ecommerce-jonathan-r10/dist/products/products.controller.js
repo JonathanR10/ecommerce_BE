@@ -8,26 +8,76 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsController = void 0;
 const common_1 = require("@nestjs/common");
 const products_service_1 = require("./products.service");
+const products_entity_1 = require("./products.entity");
 let ProductsController = class ProductsController {
     productsService;
     constructor(productsService) {
         this.productsService = productsService;
     }
-    getAllProducts() {
-        return this.productsService.getAllProducts();
+    getAllProducts(page, limit) {
+        const pageNum = Number(page);
+        const limitNum = Number(limit);
+        const validPage = isNaN(pageNum) || pageNum <= 0 ? 1 : pageNum;
+        const validLimit = isNaN(limitNum) || limitNum <= 0 ? 5 : limitNum;
+        return this.productsService.getAllProducts(validPage, validLimit);
+    }
+    addProducts() {
+        return this.productsService.addProducts();
+    }
+    getProductById(id) {
+        return this.productsService.getProductById(id);
+    }
+    updateProduct(id, newProductData) {
+        return this.productsService.updateProduct(id, newProductData);
+    }
+    deleteProduct(id) {
+        return this.productsService.deleteProduct(id);
     }
 };
 exports.ProductsController = ProductsController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "getAllProducts", null);
+__decorate([
+    (0, common_1.Get)('seeder'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
-], ProductsController.prototype, "getAllProducts", null);
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "addProducts", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "getProductById", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, products_entity_1.Products]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "updateProduct", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "deleteProduct", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [products_service_1.ProductsService])

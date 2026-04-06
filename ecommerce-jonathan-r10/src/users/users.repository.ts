@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Users } from './users.entity';
 
 const users = [
   {
@@ -153,20 +155,49 @@ const users = [
   },
 ];
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  password: string;
-  address: string;
-  phone: string;
-  country?: string | undefined;
-  city?: string | undefined;
-}
-
 @Injectable()
 export class UsersRepository {
-  getAllUsers() {
-    return users;
+  constructor(private readonly ormUsersRepository: Repository<Users>) {}
+
+  async getAllUsers(page: number, limit: number): Promise<Users[]> {
+    const skip = (page - 1) * limit;
+    const allUsers = await this.ormUsersRepository.find({
+      skip,
+      take: limit,
+    });
+
+    return allUsers;
+  }
+
+  getUserById(id: string) {
+    const foundUser = users.find((user) => user.id === id);
+    if (!foundUser) return `No se encontró al usuario con el id = ${id}`;
+
+    return foundUser;
+  }
+
+  getUserByEmail(email: string) {
+    return users.find((user) => user.email === email);
+  }
+
+  addUser(newUser: any) {
+    users.push({ ...newUser, id: newUser.email });
+    return newUser.email;
+  }
+
+  updateUser(id: string, userNewData: any) {
+    const foundUser = users.find((user) => user.id === id);
+    if (!foundUser) return `No se encontró al usuario con el id = ${id}`;
+    Object.assign(foundUser, userNewData);
+    return foundUser.id;
+  }
+
+  deleteuser(id: string) {
+    const foundIndex = users.findIndex((user) => user.id === id);
+    if (foundIndex === -1)
+      return `No se encontró al usuario con el id = ${id} `;
+
+    users.splice(foundIndex, 1);
+    return id;
   }
 }

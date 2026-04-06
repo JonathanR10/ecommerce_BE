@@ -1,109 +1,80 @@
 import { Injectable } from '@nestjs/common';
-const products: Product[] = [
-  {
-    id: '1',
-    name: 'Laptop HP Pavilion 15',
-    description: 'Laptop con Intel Core i5, 8GB RAM y 512GB SSD',
-    price: 13500,
-    stock: 10,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '2',
-    name: 'iPhone 13',
-    description: 'Smartphone con 128GB, cámara dual y chip A15',
-    price: 14500,
-    stock: 15,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '3',
-    name: 'Audífonos JBL Tune 510BT',
-    description: 'Audífonos inalámbricos con batería de larga duración',
-    price: 1200,
-    stock: 25,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '4',
-    name: "Monitor Samsung 24''",
-    description: 'Monitor Full HD con panel IPS',
-    price: 3200,
-    stock: 0,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '5',
-    name: 'Teclado Logitech K380',
-    description: 'Teclado inalámbrico compacto Bluetooth',
-    price: 800,
-    stock: 30,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '6',
-    name: 'Mouse Gamer Razer DeathAdder',
-    description: 'Mouse ergonómico con sensor óptico de alta precisión',
-    price: 950,
-    stock: 18,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '7',
-    name: 'Smart TV LG 55 pulgadas',
-    description: 'Televisión 4K UHD con WebOS',
-    price: 10500,
-    stock: 5,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '8',
-    name: 'Tablet Samsung Galaxy Tab S7',
-    description: 'Tablet con pantalla 11 pulgadas y 6GB RAM',
-    price: 9800,
-    stock: 7,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '9',
-    name: 'Disco SSD Kingston 1TB',
-    description: 'Unidad de estado sólido de alta velocidad',
-    price: 1800,
-    stock: 20,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-  {
-    id: '10',
-    name: 'Router TP-Link AX1800',
-    description: 'Router WiFi 6 de alta velocidad',
-    price: 1600,
-    stock: 12,
-    imgUrl:
-      'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-  },
-];
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  imgUrl: string;
-}
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Products } from './products.entity';
+import { Categories } from './categories.entity';
+import { allProducts } from 'src/utils/data';
 
 @Injectable()
 export class ProductsRepository {
-  getAllProducts(): Product[] {
+  constructor(
+    @InjectRepository(Products)
+    private readonly ormProductsRepository: Repository<Products>,
+    @InjectRepository(Categories)
+    private readonly ormCategoriesRepository: Repository<Categories>,
+  ) {}
+
+  async getAllProducts(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const products = await this.ormProductsRepository.find({
+      relations: {
+        category: true,
+      },
+      skip: skip,
+      take: limit,
+    });
+
     return products;
+  }
+
+  async addProducts(): Promise<string> {
+    const categories = await this.ormCategoriesRepository.find();
+    await Promise.all(
+      allProducts.map(async (elem) => {
+        const category = categories.find(
+          (category) => category.name === elem.category,
+        );
+        if (!category)
+          throw new Error(`La categoría ${elem.category} no existe`);
+
+        const product = new Products();
+        product.name = elem.name;
+        product.description = elem.description;
+        product.price = elem.price;
+        product.stock = elem.stock;
+        product.category = category;
+
+        await this.ormProductsRepository
+          .createQueryBuilder()
+          .insert()
+          .into(Products)
+          .values(product)
+          .orUpdate(['description', 'price', 'imgUrl', 'stock'], ['name'])
+          .execute();
+      }),
+    );
+    return 'Productos agregados';
+  }
+
+  async getProductById(id: string): Promise<Products | string> {
+    const product = await this.ormProductsRepository.findOneBy({ id });
+    if (!product) return `El producto con ${id} no fue encontrado`;
+    return product;
+  }
+
+  async updateProduct(
+    id: string,
+    newProductData: Products,
+  ): Promise<Products | null> {
+    await this.ormProductsRepository.update(id, newProductData);
+    const updatedProduct = this.ormProductsRepository.findOneBy({ id });
+    return updatedProduct;
+  }
+
+  async deleteProduct(id: string): Promise<string> {
+    const product = await this.ormProductsRepository.findOneBy({ id });
+    if (!product) return `Producto con id= ${id} no encontrado`;
+    await this.ormProductsRepository.delete(id);
+    return `Producto con id= ${id} eliminado`;
   }
 }

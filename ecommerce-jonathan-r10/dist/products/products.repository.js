@@ -5,98 +5,85 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsRepository = void 0;
 const common_1 = require("@nestjs/common");
-const products = [
-    {
-        id: '1',
-        name: 'Laptop HP Pavilion 15',
-        description: 'Laptop con Intel Core i5, 8GB RAM y 512GB SSD',
-        price: 13500,
-        stock: 10,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '2',
-        name: 'iPhone 13',
-        description: 'Smartphone con 128GB, cámara dual y chip A15',
-        price: 14500,
-        stock: 15,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '3',
-        name: 'Audífonos JBL Tune 510BT',
-        description: 'Audífonos inalámbricos con batería de larga duración',
-        price: 1200,
-        stock: 25,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '4',
-        name: "Monitor Samsung 24''",
-        description: 'Monitor Full HD con panel IPS',
-        price: 3200,
-        stock: 0,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '5',
-        name: 'Teclado Logitech K380',
-        description: 'Teclado inalámbrico compacto Bluetooth',
-        price: 800,
-        stock: 30,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '6',
-        name: 'Mouse Gamer Razer DeathAdder',
-        description: 'Mouse ergonómico con sensor óptico de alta precisión',
-        price: 950,
-        stock: 18,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '7',
-        name: 'Smart TV LG 55 pulgadas',
-        description: 'Televisión 4K UHD con WebOS',
-        price: 10500,
-        stock: 5,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '8',
-        name: 'Tablet Samsung Galaxy Tab S7',
-        description: 'Tablet con pantalla 11 pulgadas y 6GB RAM',
-        price: 9800,
-        stock: 7,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '9',
-        name: 'Disco SSD Kingston 1TB',
-        description: 'Unidad de estado sólido de alta velocidad',
-        price: 1800,
-        stock: 20,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-    {
-        id: '10',
-        name: 'Router TP-Link AX1800',
-        description: 'Router WiFi 6 de alta velocidad',
-        price: 1600,
-        stock: 12,
-        imgUrl: 'https://www.legrand.es/modules/custom/legrand_ecat/assets/img/no-image.png',
-    },
-];
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const products_entity_1 = require("./products.entity");
+const categories_entity_1 = require("./categories.entity");
+const data_1 = require("../utils/data");
 let ProductsRepository = class ProductsRepository {
-    getAllProducts() {
+    ormProductsRepository;
+    ormCategoriesRepository;
+    constructor(ormProductsRepository, ormCategoriesRepository) {
+        this.ormProductsRepository = ormProductsRepository;
+        this.ormCategoriesRepository = ormCategoriesRepository;
+    }
+    async getAllProducts(page, limit) {
+        const skip = (page - 1) * limit;
+        const products = await this.ormProductsRepository.find({
+            relations: {
+                category: true,
+            },
+            skip: skip,
+            take: limit,
+        });
         return products;
+    }
+    async addProducts() {
+        const categories = await this.ormCategoriesRepository.find();
+        await Promise.all(data_1.allProducts.map(async (elem) => {
+            const category = categories.find((category) => category.name === elem.category);
+            if (!category)
+                throw new Error(`La categoría ${elem.category} no existe`);
+            const product = new products_entity_1.Products();
+            product.name = elem.name;
+            product.description = elem.description;
+            product.price = elem.price;
+            product.stock = elem.stock;
+            product.category = category;
+            await this.ormProductsRepository
+                .createQueryBuilder()
+                .insert()
+                .into(products_entity_1.Products)
+                .values(product)
+                .orUpdate(['description', 'price', 'imgUrl', 'stock'], ['name'])
+                .execute();
+        }));
+        return 'Productos agregados';
+    }
+    async getProductById(id) {
+        const product = await this.ormProductsRepository.findOneBy({ id });
+        if (!product)
+            return `El producto con ${id} no fue encontrado`;
+        return product;
+    }
+    async updateProduct(id, newProductData) {
+        await this.ormProductsRepository.update(id, newProductData);
+        const updatedProduct = this.ormProductsRepository.findOneBy({ id });
+        return updatedProduct;
+    }
+    async deleteProduct(id) {
+        const product = await this.ormProductsRepository.findOneBy({ id });
+        if (!product)
+            return `Producto con id= ${id} no encontrado`;
+        await this.ormProductsRepository.delete(id);
+        return `Producto con id= ${id} eliminado`;
     }
 };
 exports.ProductsRepository = ProductsRepository;
 exports.ProductsRepository = ProductsRepository = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(products_entity_1.Products)),
+    __param(1, (0, typeorm_1.InjectRepository)(categories_entity_1.Categories)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], ProductsRepository);
 //# sourceMappingURL=products.repository.js.map

@@ -17,8 +17,20 @@ let ProductsService = class ProductsService {
     constructor(productsRepository) {
         this.productsRepository = productsRepository;
     }
-    getAllProducts() {
-        return this.productsRepository.getAllProducts();
+    getAllProducts(page, limit) {
+        return this.productsRepository.getAllProducts(page, limit);
+    }
+    addProducts() {
+        return this.productsRepository.addProducts();
+    }
+    getProductById(id) {
+        return this.productsRepository.getProductById(id);
+    }
+    updateProduct(id, newProductData) {
+        return this.productsRepository.updateProduct(id, newProductData);
+    }
+    deleteProduct(id) {
+        return this.productsRepository.deleteProduct(id);
     }
 };
 exports.ProductsService = ProductsService;
