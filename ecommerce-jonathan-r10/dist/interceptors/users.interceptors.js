@@ -15,6 +15,9 @@ let UsersInterceptor = class UsersInterceptor {
             if (Array.isArray(data)) {
                 return data.map(({ password, ...userData }) => userData);
             }
+            else if (typeof data === 'string') {
+                return data;
+            }
             const { password, ...userData } = data;
             return userData;
         }));

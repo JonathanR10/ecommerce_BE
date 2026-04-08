@@ -20,10 +20,10 @@ let AuthService = class AuthService {
     getAllAuth() {
         return 'Autenticación correcta';
     }
-    signIn(email, password) {
+    async signIn(email, password) {
         if (!email || !password)
             return 'Email y passwors son requeridos';
-        const foundUser = this.userRepository.getUserByEmail(email);
+        const foundUser = await this.userRepository.getUserByEmail(email);
         if (!foundUser)
             return 'Email o password incorrecto';
         if (foundUser.password !== password)

@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDetails } from './orderdetails.entity';
 import { Users } from 'src/users/users.entity';
 import { Products } from 'src/products/products.entity';
+import { CreateOrderDto } from './dto/createOrders.dto';
 
 @Injectable()
 export class OrdersRepository {

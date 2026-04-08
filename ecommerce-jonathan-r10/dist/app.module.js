@@ -18,6 +18,7 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("./config/typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
 const categories_module_1 = require("./categories/categories.module");
+const orders_module_1 = require("./orders/orders.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes('*');
@@ -39,6 +40,7 @@ exports.AppModule = AppModule = __decorate([
             products_module_1.ProductsModule,
             auth_module_1.AuthModule,
             categories_module_1.CategoriesModule,
+            orders_module_1.OrdersModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

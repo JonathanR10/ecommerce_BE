@@ -13,9 +13,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './users.repository';
 import { UsersInterceptor } from 'src/interceptors/users.interceptors';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Users } from './users.entity';
+import { CreateUserDto } from './DTO/CreateUser.dto';
+import { UpdateUserDto } from './DTO/UpdateUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -28,7 +30,7 @@ export class UsersController {
   getAllUsers(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
-  ): User[] {
+  ): Promise<Users[]> {
     const pageNum = Number(page);
     const limitNum = Number(limit);
 
@@ -49,17 +51,18 @@ export class UsersController {
   //  POST
   @Post()
   @HttpCode(201)
-  addUser(@Body() newUser: any) {
-    if (!newUser.name) return 'Nombre es requerido';
-    if (!newUser.email) return 'Email es requerido';
+  addUser(@Body() newUser: CreateUserDto) {
     return this.usersService.addUserService(newUser);
   }
 
   //  PUT{id}
   @Put(':id')
+  @UseInterceptors(UsersInterceptor)
   @UseGuards(AuthGuard)
-  updateUser(@Param('id') id: string, @Body() newUserData: any) {
-    if (newUserData.email) return 'No se puede actualizar el email';
+  updateUser(
+    @Param('id') id: string,
+    @Body() newUserData: UpdateUserDto,
+  ): Promise<Users | string> {
     return this.usersService.updateUserService(id, newUserData);
   }
 
