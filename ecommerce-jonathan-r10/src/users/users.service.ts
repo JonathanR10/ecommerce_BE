@@ -12,18 +12,15 @@ export class UsersService {
     return this.usersRepository.getAllUsers(page, limit);
   }
 
-  getUserByIdService(id: string) {
+  getUserByIdService(id: string): Promise<Users> {
     return this.usersRepository.getUserById(id);
   }
 
-  addUserService(newUser: CreateUserDto) {
+  addUserService(newUser: CreateUserDto): Promise<string> {
     return this.usersRepository.addUser(newUser);
   }
 
-  updateUserService(
-    id: string,
-    newUserData: UpdateUserDto,
-  ): Promise<Users | string> {
+  updateUserService(id: string, newUserData: UpdateUserDto): Promise<Users> {
     return this.usersRepository.updateUser(id, newUserData);
   }
 

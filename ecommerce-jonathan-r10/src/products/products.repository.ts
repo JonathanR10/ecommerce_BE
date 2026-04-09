@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Products } from './products.entity';
@@ -14,7 +14,7 @@ export class ProductsRepository {
     private readonly ormCategoriesRepository: Repository<Categories>,
   ) {}
 
-  async getAllProducts(page: number, limit: number) {
+  async getAllProducts(page: number, limit: number): Promise<Products[]> {
     const skip = (page - 1) * limit;
     const products = await this.ormProductsRepository.find({
       relations: {
@@ -35,7 +35,9 @@ export class ProductsRepository {
           (category) => category.name === elem.category,
         );
         if (!category)
-          throw new Error(`La categoría ${elem.category} no existe`);
+          throw new NotFoundException(
+            `La categoría ${elem.category} no existe`,
+          );
 
         const product = new Products();
         product.name = elem.name;
@@ -56,9 +58,10 @@ export class ProductsRepository {
     return 'Productos agregados';
   }
 
-  async getProductById(id: string): Promise<Products | string> {
+  async getProductById(id: string): Promise<Products> {
     const product = await this.ormProductsRepository.findOneBy({ id });
-    if (!product) return `El producto con ${id} no fue encontrado`;
+    if (!product)
+      throw new NotFoundException(`El producto con ${id} no fue encontrado`);
     return product;
   }
 
@@ -73,7 +76,8 @@ export class ProductsRepository {
 
   async deleteProduct(id: string): Promise<string> {
     const product = await this.ormProductsRepository.findOneBy({ id });
-    if (!product) return `Producto con id= ${id} no encontrado`;
+    if (!product)
+      throw new NotFoundException(`Producto con id= ${id} no encontrado`);
     await this.ormProductsRepository.delete(id);
     return `Producto con id= ${id} eliminado`;
   }

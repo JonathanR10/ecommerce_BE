@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -44,14 +45,14 @@ export class UsersController {
   @Get(':id')
   @UseGuards(AuthGuard)
   @UseInterceptors(UsersInterceptor)
-  getUserById(@Param('id') id: string) {
+  getUserById(@Param('id', ParseUUIDPipe) id: string): Promise<Users> {
     return this.usersService.getUserByIdService(id);
   }
 
   //  POST
   @Post()
   @HttpCode(201)
-  addUser(@Body() newUser: CreateUserDto) {
+  addUser(@Body() newUser: CreateUserDto): Promise<string> {
     return this.usersService.addUserService(newUser);
   }
 
@@ -60,16 +61,16 @@ export class UsersController {
   @UseInterceptors(UsersInterceptor)
   @UseGuards(AuthGuard)
   updateUser(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() newUserData: UpdateUserDto,
-  ): Promise<Users | string> {
+  ): Promise<Users> {
     return this.usersService.updateUserService(id, newUserData);
   }
 
   //  DELETE{id})
   @Delete(':id')
   @UseGuards(AuthGuard)
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.deleteUserService(id);
   }
 }

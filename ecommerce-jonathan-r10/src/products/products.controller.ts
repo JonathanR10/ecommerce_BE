@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Put,
   Query,
 } from '@nestjs/common';
@@ -34,17 +35,20 @@ export class ProductsController {
   }
 
   @Get(':id')
-  getProductById(@Param('id') id: string) {
+  getProductById(@Param('id', ParseUUIDPipe) id: string): Promise<Products> {
     return this.productsService.getProductById(id);
   }
 
   @Put(':id')
-  updateProduct(@Param('id') id: string, @Body() newProductData: Products) {
+  updateProduct(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() newProductData: Products,
+  ) {
     return this.productsService.updateProduct(id, newProductData);
   }
 
   @Delete(':id')
-  deleteProduct(@Param('id') id: string) {
+  deleteProduct(@Param('id', ParseUUIDPipe) id: string): Promise<string> {
     return this.productsService.deleteProduct(id);
   }
 }

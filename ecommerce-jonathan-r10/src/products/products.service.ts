@@ -6,7 +6,7 @@ import { Products } from './products.entity';
 export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
-  getAllProducts(page: number, limit: number) {
+  getAllProducts(page: number, limit: number): Promise<Products[]> {
     return this.productsRepository.getAllProducts(page, limit);
   }
 
@@ -14,7 +14,7 @@ export class ProductsService {
     return this.productsRepository.addProducts();
   }
 
-  getProductById(id: string) {
+  getProductById(id: string): Promise<Products> {
     return this.productsRepository.getProductById(id);
   }
 
@@ -22,7 +22,7 @@ export class ProductsService {
     return this.productsRepository.updateProduct(id, newProductData);
   }
 
-  deleteProduct(id: string) {
+  deleteProduct(id: string): Promise<string> {
     return this.productsRepository.deleteProduct(id);
   }
 }
