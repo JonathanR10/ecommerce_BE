@@ -6,8 +6,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Categories } from './categories.entity';
 import { OrderDetails } from 'src/orders/orderdetails.entity';
+import { Categories } from 'src/categories/categories.entity';
 
 @Entity({ name: 'PRODUCTS' })
 export class Products {
@@ -48,6 +48,9 @@ export class Products {
       'https://st3.depositphotos.com/1322515/35964/v/600/depositphotos_359648638-stock-illustration-image-available-icon.jpg',
   })
   imgUrl: string;
+
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 
   @ManyToOne(() => Categories, (categories) => categories.products)
   @JoinColumn({ name: 'category_id' })

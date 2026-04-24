@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoriesRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const categories_entity_1 = require("../products/categories.entity");
 const data_1 = require("../utils/data");
 const typeorm_2 = require("typeorm");
+const categories_entity_1 = require("./categories.entity");
 let CategoriesRepository = class CategoriesRepository {
     ormCategoriesRepository;
     constructor(ormCategoriesRepository) {

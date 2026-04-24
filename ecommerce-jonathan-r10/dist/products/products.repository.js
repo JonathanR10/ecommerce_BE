@@ -17,8 +17,8 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const products_entity_1 = require("./products.entity");
-const categories_entity_1 = require("./categories.entity");
 const data_1 = require("../utils/data");
+const categories_entity_1 = require("../categories/categories.entity");
 let ProductsRepository = class ProductsRepository {
     ormProductsRepository;
     ormCategoriesRepository;
@@ -42,7 +42,7 @@ let ProductsRepository = class ProductsRepository {
         await Promise.all(data_1.allProducts.map(async (elem) => {
             const category = categories.find((category) => category.name === elem.category);
             if (!category)
-                throw new Error(`La categoría ${elem.category} no existe`);
+                throw new common_1.NotFoundException(`La categoría ${elem.category} no existe`);
             const product = new products_entity_1.Products();
             product.name = elem.name;
             product.description = elem.description;
@@ -62,10 +62,13 @@ let ProductsRepository = class ProductsRepository {
     async getProductById(id) {
         const product = await this.ormProductsRepository.findOneBy({ id });
         if (!product)
-            return `El producto con ${id} no fue encontrado`;
+            throw new common_1.NotFoundException(`El producto con ${id} no fue encontrado`);
         return product;
     }
     async updateProduct(id, newProductData) {
+        const product = await this.ormProductsRepository.findOneBy({ id });
+        if (!product)
+            throw new common_1.NotFoundException(`El producto con ${id} no fue encontrado`);
         await this.ormProductsRepository.update(id, newProductData);
         const updatedProduct = this.ormProductsRepository.findOneBy({ id });
         return updatedProduct;
@@ -73,9 +76,20 @@ let ProductsRepository = class ProductsRepository {
     async deleteProduct(id) {
         const product = await this.ormProductsRepository.findOneBy({ id });
         if (!product)
-            return `Producto con id= ${id} no encontrado`;
-        await this.ormProductsRepository.delete(id);
+            throw new common_1.NotFoundException(`Producto con id= ${id} no encontrado`);
+        product.isActive = false;
+        await this.ormProductsRepository.save(product);
         return `Producto con id= ${id} eliminado`;
+    }
+    async updateProductImgUrl(id, imgUrl) {
+        const productFound = await this.ormProductsRepository.findOneBy({ id });
+        if (!productFound)
+            throw new common_1.NotFoundException({
+                message: `No se encontro producto con Id= ${id}`,
+            });
+        productFound.imgUrl = imgUrl;
+        await this.ormProductsRepository.save(productFound);
+        return await this.ormProductsRepository.findOneBy({ id });
     }
 };
 exports.ProductsRepository = ProductsRepository;

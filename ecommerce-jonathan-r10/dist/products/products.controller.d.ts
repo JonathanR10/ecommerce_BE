@@ -5,7 +5,7 @@ export declare class ProductsController {
     constructor(productsService: ProductsService);
     getAllProducts(page?: string, limit?: string): Promise<Products[]>;
     addProducts(): Promise<string>;
-    getProductById(id: string): Promise<string | Products>;
+    getProductById(id: string): Promise<Products>;
     updateProduct(id: string, newProductData: Products): Promise<Products | null>;
     deleteProduct(id: string): Promise<string>;
 }

@@ -7,7 +7,9 @@ async function bootstrap() {
     const PORT = process.env.PORT ?? 3000;
     const HOST = process.env.HOST;
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.useGlobalPipes(new common_1.ValidationPipe());
+    app.useGlobalPipes(new common_1.ValidationPipe({
+        whitelist: true,
+    }));
     await app.listen(PORT);
     console.log(`Servidor escuchando en ${HOST}:${PORT}/ ... `);
 }

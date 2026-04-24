@@ -42,20 +42,19 @@ let UsersRepository = class UsersRepository {
             },
         });
         if (!foundUser)
-            return `No se encontró al usuario con el id = ${id}`;
+            throw new common_1.NotFoundException(`No se encontró al usuario con el id = ${id}`);
         return foundUser;
     }
     async getUserByEmail(email) {
         return await this.ormUsersRepository.findOneBy({ email });
     }
     async addUser(newUser) {
-        const savedUser = await this.ormUsersRepository.save(newUser);
-        return savedUser.id;
+        return await this.ormUsersRepository.save(newUser);
     }
     async updateUser(id, userNewData) {
         const foundUser = await this.ormUsersRepository.findOneBy({ id });
         if (!foundUser)
-            return `No se encontró al usuario con el id = ${id}`;
+            throw new common_1.NotFoundException(`No se encontró al usuario con el id = ${id}`);
         const mergedUser = this.ormUsersRepository.merge(foundUser, userNewData);
         const savedUser = await this.ormUsersRepository.save(mergedUser);
         return savedUser;
@@ -63,8 +62,9 @@ let UsersRepository = class UsersRepository {
     async deleteuser(id) {
         const foundUser = await this.ormUsersRepository.findOneBy({ id });
         if (!foundUser)
-            return `No se encontró al usuario con el id = ${id}`;
-        await this.ormUsersRepository.remove(foundUser);
+            throw new common_1.NotFoundException(`No se encontró al usuario con el id = ${id}`);
+        foundUser.isActive = false;
+        await this.ormUsersRepository.save(foundUser);
         return foundUser.id;
     }
 };

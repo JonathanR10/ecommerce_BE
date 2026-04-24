@@ -1,5 +1,5 @@
-import { Categories } from 'src/products/categories.entity';
 import { Repository } from 'typeorm';
+import { Categories } from './categories.entity';
 export declare class CategoriesRepository {
     private readonly ormCategoriesRepository;
     constructor(ormCategoriesRepository: Repository<Categories>);

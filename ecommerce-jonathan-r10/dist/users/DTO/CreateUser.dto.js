@@ -11,14 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserDto = void 0;
 const class_validator_1 = require("class-validator");
+const matchPassword_decorator_1 = require("../../decorators/matchPassword.decorator");
 class CreateUserDto {
     name;
     email;
     password;
+    confirmPassword;
     phone;
     address;
     country;
     city;
+    isAdmin;
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
@@ -49,6 +52,11 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "password", void 0);
 __decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: 'La confirmación de la contraseña no puede ir vacia' }),
+    (0, class_validator_1.Validate)(matchPassword_decorator_1.MatchPassword, ['password']),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "confirmPassword", void 0);
+__decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'Telefono no puede ir vacio' }),
     (0, class_validator_1.IsNumber)({
         allowNaN: false,
@@ -74,4 +82,8 @@ __decorate([
     (0, class_validator_1.MaxLength)(20, { message: 'Ciudad no debe ser mayor a 20 caracteres' }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "city", void 0);
+__decorate([
+    (0, class_validator_1.IsEmpty)({ message: 'isAdmin no puede ser configurado en la creación' }),
+    __metadata("design:type", Boolean)
+], CreateUserDto.prototype, "isAdmin", void 0);
 //# sourceMappingURL=CreateUser.dto.js.map

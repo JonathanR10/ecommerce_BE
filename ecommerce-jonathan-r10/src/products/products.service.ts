@@ -25,4 +25,8 @@ export class ProductsService {
   deleteProduct(id: string): Promise<string> {
     return this.productsRepository.deleteProduct(id);
   }
+
+  updateProductImgUrl(id: string, imgUrl: string) {
+    return this.productsRepository.updateProductImgUrl(id, imgUrl);
+  }
 }

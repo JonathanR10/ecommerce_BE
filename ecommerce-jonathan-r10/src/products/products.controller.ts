@@ -7,9 +7,14 @@ import {
   ParseUUIDPipe,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Products } from './products.entity';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/common/roles.enum';
 
 @Controller('products')
 export class ProductsController {
@@ -40,6 +45,8 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() newProductData: Products,

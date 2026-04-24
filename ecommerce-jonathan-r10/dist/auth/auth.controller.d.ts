@@ -1,8 +1,15 @@
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/users/DTO/LoginUser.dto';
+import { CreateUserDto } from 'src/users/DTO/CreateUser.dto';
+import { Users } from 'src/users/users.entity';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     getAuth(): string;
-    signIn(credentials: LoginUserDto): Promise<"Email y passwors son requeridos" | "Email o password incorrecto" | "Usuario loggeado">;
+    signUp(newUserData: CreateUserDto): Promise<Users>;
+    signIn(credentials: LoginUserDto): Promise<{
+        message: string;
+        logged: boolean;
+        token: string;
+    }>;
 }

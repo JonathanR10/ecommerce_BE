@@ -6,4 +6,8 @@ export declare const environment: {
     DB_PORT: string | number;
     DB_USERNAME: string | undefined;
     DB_PASSWORD: string | undefined;
+    CLOUDINARY_API_KEY: string | undefined;
+    CLOUDINARY_CLOUD_NAME: string | undefined;
+    CLOUDINARY_API_SECRET: string | undefined;
+    JWT_SECRET: string | undefined;
 };

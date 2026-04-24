@@ -16,10 +16,6 @@ export class UsersService {
     return this.usersRepository.getUserById(id);
   }
 
-  addUserService(newUser: CreateUserDto): Promise<string> {
-    return this.usersRepository.addUser(newUser);
-  }
-
   updateUserService(id: string, newUserData: UpdateUserDto): Promise<Users> {
     return this.usersRepository.updateUser(id, newUserData);
   }

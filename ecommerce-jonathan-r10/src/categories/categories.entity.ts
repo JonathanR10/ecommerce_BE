@@ -1,3 +1,4 @@
+import { Products } from 'src/products/products.entity';
 import {
   Column,
   Entity,
@@ -5,14 +6,13 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Products } from './products.entity';
 
 @Entity({
   name: 'CATEGORIES',
 })
 export class Categories {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({
     type: 'varchar',
@@ -20,9 +20,9 @@ export class Categories {
     nullable: false,
     unique: true,
   })
-  name: string;
+  name!: string;
 
   @OneToMany(() => Products, (product) => product.category)
   @JoinColumn()
-  products: Products[];
+  products!: Products[];
 }

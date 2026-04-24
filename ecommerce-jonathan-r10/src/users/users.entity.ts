@@ -6,14 +6,14 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 })
 export class Users {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({
     type: 'varchar',
     length: 50,
     nullable: false,
   })
-  name: string;
+  name!: string;
 
   @Column({
     type: 'varchar',
@@ -21,37 +21,49 @@ export class Users {
     nullable: false,
     unique: true,
   })
-  email: string;
+  email!: string;
 
   @Column({
     type: 'varchar',
-    length: 20,
+    length: 80,
     nullable: false,
   })
-  password: string;
+  password!: string;
 
   @Column({
     type: 'int',
   })
-  phone: number;
+  phone!: number;
 
   @Column({
     type: 'varchar',
     length: 50,
   })
-  country: string;
+  country!: string;
 
   @Column({
     type: 'varchar',
     length: 50,
   })
-  city: string;
+  city!: string;
+
+  @Column({
+    type: 'boolean',
+    default: true,
+  })
+  isActive!: boolean;
 
   @Column({
     type: 'text',
   })
-  address: string;
+  address!: string;
+
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isAdmin!: boolean;
 
   @OneToMany(() => Orders, (order) => order.user)
-  orders: Orders[];
+  orders!: Orders[];
 }

@@ -32,6 +32,9 @@ let ProductsService = class ProductsService {
     deleteProduct(id) {
         return this.productsRepository.deleteProduct(id);
     }
+    updateProductImgUrl(id, imgUrl) {
+        return this.productsRepository.updateProductImgUrl(id, imgUrl);
+    }
 };
 exports.ProductsService = ProductsService;
 exports.ProductsService = ProductsService = __decorate([

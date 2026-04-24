@@ -23,9 +23,6 @@ let UsersService = class UsersService {
     getUserByIdService(id) {
         return this.usersRepository.getUserById(id);
     }
-    addUserService(newUser) {
-        return this.usersRepository.addUser(newUser);
-    }
     updateUserService(id, newUserData) {
         return this.usersRepository.updateUser(id, newUserData);
     }

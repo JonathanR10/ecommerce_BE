@@ -7,6 +7,8 @@ export declare class Users {
     phone: number;
     country: string;
     city: string;
+    isActive: boolean;
     address: string;
+    isAdmin: boolean;
     orders: Orders[];
 }

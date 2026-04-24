@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Products } from './products.entity';
-import { Categories } from './categories.entity';
 import { allProducts } from 'src/utils/data';
+import { Categories } from 'src/categories/categories.entity';
 
 @Injectable()
 export class ProductsRepository {
@@ -69,6 +69,9 @@ export class ProductsRepository {
     id: string,
     newProductData: Products,
   ): Promise<Products | null> {
+    const product = await this.ormProductsRepository.findOneBy({ id });
+    if (!product)
+      throw new NotFoundException(`El producto con ${id} no fue encontrado`);
     await this.ormProductsRepository.update(id, newProductData);
     const updatedProduct = this.ormProductsRepository.findOneBy({ id });
     return updatedProduct;
@@ -78,7 +81,22 @@ export class ProductsRepository {
     const product = await this.ormProductsRepository.findOneBy({ id });
     if (!product)
       throw new NotFoundException(`Producto con id= ${id} no encontrado`);
-    await this.ormProductsRepository.delete(id);
+    product.isActive = false;
+    await this.ormProductsRepository.save(product);
     return `Producto con id= ${id} eliminado`;
+  }
+
+  async updateProductImgUrl(id: string, imgUrl: string) {
+    const productFound = await this.ormProductsRepository.findOneBy({ id });
+    if (!productFound)
+      throw new NotFoundException({
+        message: `No se encontro producto con Id= ${id}`,
+      });
+
+    productFound.imgUrl = imgUrl;
+
+    await this.ormProductsRepository.save(productFound);
+
+    return await this.ormProductsRepository.findOneBy({ id });
   }
 }

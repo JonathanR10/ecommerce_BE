@@ -45,9 +45,8 @@ export class UsersRepository {
     return await this.ormUsersRepository.findOneBy({ email });
   }
 
-  async addUser(newUser: CreateUserDto): Promise<string> {
-    const savedUser = await this.ormUsersRepository.save(newUser);
-    return savedUser.id;
+  async addUser(newUser: CreateUserDto): Promise<Users> {
+    return await this.ormUsersRepository.save(newUser);
   }
 
   async updateUser(id: string, userNewData: UpdateUserDto): Promise<Users> {
@@ -67,7 +66,9 @@ export class UsersRepository {
       throw new NotFoundException(
         `No se encontró al usuario con el id = ${id}`,
       );
-    await this.ormUsersRepository.remove(foundUser);
+
+    foundUser.isActive = false;
+    await this.ormUsersRepository.save(foundUser);
 
     return foundUser.id;
   }

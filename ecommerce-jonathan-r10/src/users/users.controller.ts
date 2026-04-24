@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Body,
   Controller,
@@ -7,7 +6,6 @@ import {
   HttpCode,
   Param,
   ParseUUIDPipe,
-  Post,
   Put,
   Query,
   UseGuards,
@@ -17,8 +15,10 @@ import { UsersService } from './users.service';
 import { UsersInterceptor } from 'src/interceptors/users.interceptors';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Users } from './users.entity';
-import { CreateUserDto } from './DTO/CreateUser.dto';
 import { UpdateUserDto } from './DTO/UpdateUser.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/common/roles.enum';
 
 @Controller('users')
 export class UsersController {
@@ -27,7 +27,8 @@ export class UsersController {
   @Get()
   @HttpCode(200)
   @UseInterceptors(UsersInterceptor)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   getAllUsers(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -41,7 +42,6 @@ export class UsersController {
     return this.usersService.getAllUsersService(validPage, validLimit);
   }
 
-  //  GET{id}
   @Get(':id')
   @UseGuards(AuthGuard)
   @UseInterceptors(UsersInterceptor)
@@ -49,14 +49,6 @@ export class UsersController {
     return this.usersService.getUserByIdService(id);
   }
 
-  //  POST
-  @Post()
-  @HttpCode(201)
-  addUser(@Body() newUser: CreateUserDto): Promise<string> {
-    return this.usersService.addUserService(newUser);
-  }
-
-  //  PUT{id}
   @Put(':id')
   @UseInterceptors(UsersInterceptor)
   @UseGuards(AuthGuard)
@@ -67,7 +59,6 @@ export class UsersController {
     return this.usersService.updateUserService(id, newUserData);
   }
 
-  //  DELETE{id})
   @Delete(':id')
   @UseGuards(AuthGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {

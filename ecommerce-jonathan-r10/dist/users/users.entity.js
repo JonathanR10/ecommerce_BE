@@ -20,7 +20,9 @@ let Users = class Users {
     phone;
     country;
     city;
+    isActive;
     address;
+    isAdmin;
     orders;
 };
 exports.Users = Users;
@@ -48,7 +50,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({
         type: 'varchar',
-        length: 20,
+        length: 80,
         nullable: false,
     }),
     __metadata("design:type", String)
@@ -75,10 +77,24 @@ __decorate([
 ], Users.prototype, "city", void 0);
 __decorate([
     (0, typeorm_1.Column)({
+        type: 'boolean',
+        default: true,
+    }),
+    __metadata("design:type", Boolean)
+], Users.prototype, "isActive", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
         type: 'text',
     }),
     __metadata("design:type", String)
 ], Users.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'boolean',
+        default: false,
+    }),
+    __metadata("design:type", Boolean)
+], Users.prototype, "isAdmin", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => orders_entity_1.Orders, (order) => order.user),
     __metadata("design:type", Array)

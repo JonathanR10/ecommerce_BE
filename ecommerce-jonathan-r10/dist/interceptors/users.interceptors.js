@@ -13,12 +13,12 @@ let UsersInterceptor = class UsersInterceptor {
     intercept(context, next) {
         return next.handle().pipe((0, operators_1.map)((data) => {
             if (Array.isArray(data)) {
-                return data.map(({ password, ...userData }) => userData);
+                return data.map(({ password, isAdmin, ...userData }) => userData);
             }
             else if (typeof data === 'string') {
                 return data;
             }
-            const { password, ...userData } = data;
+            const { password, isadmin, ...userData } = data;
             return userData;
         }));
     }

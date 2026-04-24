@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -10,6 +15,12 @@ import { typeOrmConfig } from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
+import { CategoriesService } from './categories/categories.service';
+import { ProductsService } from './products/products.service';
+import { Console } from 'console';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { JwtModule } from '@nestjs/jwt';
+import { environment } from './config/environment';
 
 @Module({
   imports: [
@@ -27,12 +38,29 @@ import { OrdersModule } from './orders/orders.module';
     AuthModule,
     CategoriesModule,
     OrdersModule,
+    FileUploadModule,
+    JwtModule.register({
+      global: true,
+      secret: environment.JWT_SECRET,
+      signOptions: { expiresIn: '60m' },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule {
+export class AppModule implements NestModule, OnApplicationBootstrap {
+  constructor(
+    private readonly categoriesService: CategoriesService,
+    private readonly productsService: ProductsService,
+  ) {}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+
+  async onApplicationBootstrap() {
+    await this.categoriesService.addCategories();
+    console.log('Categorias cargadas...');
+    await this.productsService.addProducts();
+    console.log('Productos cargados...');
   }
 }

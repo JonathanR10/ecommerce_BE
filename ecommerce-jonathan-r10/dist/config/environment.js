@@ -44,5 +44,9 @@ exports.environment = {
     DB_PORT: process.env.PORT || 5432,
     DB_USERNAME: process.env.DB_USERNAME,
     DB_PASSWORD: process.env.DB_PASSWORD,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+    JWT_SECRET: process.env.JWT_SECRET,
 };
 //# sourceMappingURL=environment.js.map
