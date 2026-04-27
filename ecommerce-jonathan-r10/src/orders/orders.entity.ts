@@ -14,15 +14,15 @@ import { Users } from 'src/users/users.entity';
 })
 export class Orders {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  date: Date;
+  date!: Date;
 
   @OneToOne(() => OrderDetails, (OrderDetails) => OrderDetails.order)
-  orderDetails: OrderDetails;
+  orderDetails!: OrderDetails;
 
   @ManyToOne(() => Users, (user) => user.orders)
   @JoinColumn({ name: 'user_id' })
-  user: Users;
+  user!: Users;
 }

@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { Orders } from './orders.entity';
 import { Repository } from 'typeorm';
@@ -8,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDetails } from './orderdetails.entity';
 import { Users } from 'src/users/users.entity';
 import { Products } from 'src/products/products.entity';
-import { CreateOrderDto } from './dto/createOrders.dto';
 
 @Injectable()
 export class OrdersRepository {
@@ -41,13 +37,11 @@ export class OrdersRepository {
   }
 
   async addOrder(newOrderData: any): Promise<Orders[] | string> {
-    // Se desestrucutra la info que llega
     const { userId, products } = newOrderData;
-    // Se busca que el usuario exista
+
     const user = await this.ormUsersRepository.findOneBy({ id: userId });
     if (!user) return `Usuario con id=${userId} no encontrado`;
 
-    // Se crea la orden
     const order = new Orders();
     order.date = new Date();
     order.user = user;

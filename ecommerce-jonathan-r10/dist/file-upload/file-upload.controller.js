@@ -16,6 +16,7 @@ exports.FileUploadController = void 0;
 const common_1 = require("@nestjs/common");
 const file_upload_service_1 = require("./file-upload.service");
 const platform_express_1 = require("@nestjs/platform-express");
+const auth_guard_1 = require("../auth/guards/auth.guard");
 let FileUploadController = class FileUploadController {
     fileUploadService;
     constructor(fileUploadService) {
@@ -29,6 +30,7 @@ let FileUploadController = class FileUploadController {
 exports.FileUploadController = FileUploadController;
 __decorate([
     (0, common_1.Put)('uploadImage/:id'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({

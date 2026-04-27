@@ -11,4 +11,6 @@ export declare class Users {
     address: string;
     isAdmin: boolean;
     orders: Orders[];
+    createdAt: Date;
+    updatedAt: Date;
 }

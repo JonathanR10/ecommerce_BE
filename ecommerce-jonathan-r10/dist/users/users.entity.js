@@ -24,6 +24,8 @@ let Users = class Users {
     address;
     isAdmin;
     orders;
+    createdAt;
+    updatedAt;
 };
 exports.Users = Users;
 __decorate([
@@ -99,6 +101,14 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => orders_entity_1.Orders, (order) => order.user),
     __metadata("design:type", Array)
 ], Users.prototype, "orders", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Users.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Users.prototype, "updatedAt", void 0);
 exports.Users = Users = __decorate([
     (0, typeorm_1.Entity)({
         name: 'USERS',

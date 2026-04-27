@@ -10,4 +10,6 @@ export declare class Products {
     isActive: boolean;
     category: Categories;
     order_details: OrderDetails[];
+    createdAt: Date;
+    updatedAt: Date;
 }

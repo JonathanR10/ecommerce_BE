@@ -1,10 +1,12 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { OrderDetails } from 'src/orders/orderdetails.entity';
 import { Categories } from 'src/categories/categories.entity';
@@ -12,7 +14,7 @@ import { Categories } from 'src/categories/categories.entity';
 @Entity({ name: 'PRODUCTS' })
 export class Products {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({
     type: 'varchar',
@@ -20,13 +22,13 @@ export class Products {
     unique: true,
     nullable: false,
   })
-  name: string;
+  name!: string;
 
   @Column({
     type: 'text',
     nullable: false,
   })
-  description: string;
+  description!: string;
 
   @Column({
     type: 'decimal',
@@ -34,28 +36,34 @@ export class Products {
     scale: 2,
     nullable: false,
   })
-  price: number;
+  price!: number;
 
   @Column({
     type: 'int',
     nullable: false,
   })
-  stock: number;
+  stock!: number;
 
   @Column({
     type: 'varchar',
     default:
       'https://st3.depositphotos.com/1322515/35964/v/600/depositphotos_359648638-stock-illustration-image-available-icon.jpg',
   })
-  imgUrl: string;
+  imgUrl!: string;
 
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
   @ManyToOne(() => Categories, (categories) => categories.products)
   @JoinColumn({ name: 'category_id' })
-  category: Categories;
+  category!: Categories;
 
   @ManyToMany(() => OrderDetails, (orderDetails) => orderDetails.products)
-  order_details: OrderDetails[];
+  order_details!: OrderDetails[];
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

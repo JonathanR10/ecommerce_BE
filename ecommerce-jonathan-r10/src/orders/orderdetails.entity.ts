@@ -13,7 +13,7 @@ import { Products } from 'src/products/products.entity';
 @Entity({ name: 'ORDERDETAILS' })
 export class OrderDetails {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({
     type: 'decimal',
@@ -21,11 +21,11 @@ export class OrderDetails {
     scale: 2,
     nullable: false,
   })
-  price: number;
+  price!: number;
 
   @OneToOne(() => Orders, (order) => order.orderDetails)
   @JoinColumn({ name: 'order_id' })
-  order: Orders;
+  order!: Orders;
 
   @ManyToMany(() => Products)
   @JoinTable({
@@ -39,5 +39,5 @@ export class OrderDetails {
       referencedColumnName: 'id',
     },
   })
-  products: Products[];
+  products!: Products[];
 }

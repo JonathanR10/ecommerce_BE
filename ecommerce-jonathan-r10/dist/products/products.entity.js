@@ -23,6 +23,8 @@ let Products = class Products {
     isActive;
     category;
     order_details;
+    createdAt;
+    updatedAt;
 };
 exports.Products = Products;
 __decorate([
@@ -81,6 +83,14 @@ __decorate([
     (0, typeorm_1.ManyToMany)(() => orderdetails_entity_1.OrderDetails, (orderDetails) => orderDetails.products),
     __metadata("design:type", Array)
 ], Products.prototype, "order_details", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Products.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Products.prototype, "updatedAt", void 0);
 exports.Products = Products = __decorate([
     (0, typeorm_1.Entity)({ name: 'PRODUCTS' })
 ], Products);
