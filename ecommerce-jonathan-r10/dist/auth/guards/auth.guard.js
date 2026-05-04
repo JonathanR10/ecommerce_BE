@@ -11,12 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
-const environment_1 = require("../../config/environment");
 let AuthGuard = class AuthGuard {
     jwtService;
-    constructor(jwtService) {
+    configService;
+    constructor(jwtService, configService) {
         this.jwtService = jwtService;
+        this.configService = configService;
     }
     canActivate(context) {
         const req = context.switchToHttp().getRequest();
@@ -27,14 +29,19 @@ let AuthGuard = class AuthGuard {
         if (type !== 'Bearer' || !token)
             throw new common_1.UnauthorizedException('No se ha enviado token');
         try {
+            const secret = this.configService.get('JWT_SECRET');
             const payload = this.jwtService.verify(token, {
-                secret: environment_1.environment.JWT_SECRET,
+                secret,
             });
             req.user = payload;
         }
         catch (error) {
             if (error.name === 'TokenExpiredError')
                 throw new common_1.UnauthorizedException('El token ha expirado');
+            else if (error.name === 'JsonWebTokenError')
+                throw new common_1.UnauthorizedException('Error en el Token. Formato incorrecto o corrupto');
+            else if (error.name === 'NotBeforeError')
+                throw new common_1.UnauthorizedException('Token valido para una fecha posterior');
             throw new common_1.UnauthorizedException('Error en el token');
         }
         return true;
@@ -43,6 +50,7 @@ let AuthGuard = class AuthGuard {
 exports.AuthGuard = AuthGuard;
 exports.AuthGuard = AuthGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
+    __metadata("design:paramtypes", [jwt_1.JwtService,
+        config_1.ConfigService])
 ], AuthGuard);
 //# sourceMappingURL=auth.guard.js.map

@@ -26,6 +26,10 @@ import { environment } from './config/environment';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env.development',
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
       load: [typeOrmConfig],
     }),
     TypeOrmModule.forRootAsync({

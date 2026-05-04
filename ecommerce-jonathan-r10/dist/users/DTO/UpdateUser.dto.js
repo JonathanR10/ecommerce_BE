@@ -10,6 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateUserDto = void 0;
+const openapi = require("@nestjs/swagger");
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class UpdateUserDto {
     email;
@@ -20,17 +22,26 @@ class UpdateUserDto {
     address;
     country;
     city;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { password: { required: false, type: () => String, minLength: 8, maxLength: 15 }, phone: { required: false, type: () => Number, minimum: 100000000, maximum: 999999999 }, name: { required: false, type: () => String, minLength: 3, maxLength: 80 }, address: { required: false, type: () => String, minLength: 3, maxLength: 80 }, country: { required: false, type: () => String, minLength: 5, maxLength: 20 }, city: { required: false, type: () => String, minLength: 5, maxLength: 20 } };
+    }
 }
 exports.UpdateUserDto = UpdateUserDto;
 __decorate([
+    (0, swagger_1.ApiHideProperty)(),
     (0, class_validator_1.IsEmpty)({ message: 'Email no es un parametro editable' }),
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiHideProperty)(),
     (0, class_validator_1.IsEmpty)({ message: 'Id no es un parametro editable' }),
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "id", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'La contraseña debe contener al menos 1 minuscula, 1 mayuscula, 1 numero y 1 simbolo. La longitud es entre 8 y 15 caracteres',
+        example: 'aaBB33##',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'Contraseña no puede ir vacía' }),
     (0, class_validator_1.IsString)({ message: 'Contraseña debe ser un string' }),
@@ -47,15 +58,25 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "password", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Debe de ser un numero valido y no puede ir vacio. Formato de 9 digitos exactamente',
+        example: '123456789',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'Telefono no puede ir vacio' }),
     (0, class_validator_1.IsNumber)({
         allowNaN: false,
         allowInfinity: false,
     }, { message: 'Telefono debe de ser un numero valido' }),
+    (0, class_validator_1.Min)(100000000, { message: 'Longitud debe de ser 9 digitos exactamente' }),
+    (0, class_validator_1.Max)(999999999, { message: 'Longitud debe de ser 9 digitos exactamente' }),
     __metadata("design:type", Number)
 ], UpdateUserDto.prototype, "phone", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Debe ser una cadena de texto de entre 3 y 80 caracteres',
+        example: 'Test User 001',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'El nombre no puede ir vacío' }),
     (0, class_validator_1.IsString)({ message: 'El nombre debe de ser un string' }),
@@ -64,6 +85,10 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Debe de contener entre 3 y 80 caracteres',
+        example: 'Test Street #1 main Ave.',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)({ message: 'Dirección debe ser un string' }),
     (0, class_validator_1.MinLength)(3, { message: 'Dirección no debe ser menor a 3 caracteres' }),
@@ -71,6 +96,10 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "address", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Debe de contener entre 5 y 20 caracteres',
+        example: 'Test Country',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)({ message: 'País debe ser un string' }),
     (0, class_validator_1.MinLength)(5, { message: 'País no debe ser menor a 5 caracteres' }),
@@ -78,6 +107,10 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "country", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Debe de contener entre 5 y 20 caracteres',
+        example: 'Test City',
+    }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)({ message: 'Ciudad debe ser un string' }),
     (0, class_validator_1.MinLength)(5, { message: 'Ciudad no debe ser menor a 5 caracteres' }),

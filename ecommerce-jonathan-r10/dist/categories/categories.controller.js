@@ -10,8 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoriesController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const categories_service_1 = require("./categories.service");
+const swagger_1 = require("@nestjs/swagger");
 let CategoriesController = class CategoriesController {
     categoriesService;
     constructor(categoriesService) {
@@ -27,12 +29,26 @@ let CategoriesController = class CategoriesController {
 exports.CategoriesController = CategoriesController;
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Ruta para obtener el listado de categorias existentes',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Acceso al listado de categorias correctamente',
+    }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CategoriesController.prototype, "getAllCategories", null);
 __decorate([
     (0, common_1.Get)('seeder'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Ruta para agregar categorias (seeder)',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Categorias agregadas correctamente',
+    }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

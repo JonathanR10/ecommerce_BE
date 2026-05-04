@@ -10,19 +10,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Categories = void 0;
+const openapi = require("@nestjs/swagger");
+const swagger_1 = require("@nestjs/swagger");
 const products_entity_1 = require("../products/products.entity");
 const typeorm_1 = require("typeorm");
 let Categories = class Categories {
     id;
     name;
     products;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String } };
+    }
 };
 exports.Categories = Categories;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es una string en formato UUID v4',
+    }),
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], Categories.prototype, "id", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es valor de tipo string para indicar el nombre de la categoría',
+        maxLength: 50,
+        nullable: false,
+        example: 'Test Category',
+        uniqueItems: true,
+    }),
     (0, typeorm_1.Column)({
         type: 'varchar',
         length: 50,
@@ -32,6 +47,7 @@ __decorate([
     __metadata("design:type", String)
 ], Categories.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiHideProperty)(),
     (0, typeorm_1.OneToMany)(() => products_entity_1.Products, (product) => product.category),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)

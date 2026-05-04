@@ -13,24 +13,55 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileUploadController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const file_upload_service_1 = require("./file-upload.service");
 const platform_express_1 = require("@nestjs/platform-express");
 const auth_guard_1 = require("../auth/guards/auth.guard");
+const swagger_1 = require("@nestjs/swagger");
+const roles_decorator_1 = require("../decorators/roles.decorator");
+const roles_enum_1 = require("../common/roles.enum");
 let FileUploadController = class FileUploadController {
     fileUploadService;
     constructor(fileUploadService) {
         this.fileUploadService = fileUploadService;
     }
     async uploadImage(productId, file) {
-        console.log(file);
         return this.fileUploadService.uploadImage(productId, file);
     }
 };
 exports.FileUploadController = FileUploadController;
 __decorate([
     (0, common_1.Put)('uploadImage/:id'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: 'Cargar una imagen para un producto' }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'Id del producto que se desea actualizar',
+        type: 'string',
+    }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'La imagen fue cargada correctamente',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 404,
+        description: 'No existe el producto con el ID indicado',
+    }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({

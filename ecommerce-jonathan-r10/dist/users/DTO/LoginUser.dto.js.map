@@ -1,1 +1,1 @@
-{"version":3,"file":"LoginUser.dto.js","sourceRoot":"","sources":["../../../src/users/DTO/LoginUser.dto.ts"],"names":[],"mappings":";;;AAAA,uDAAgD;AAChD,qDAAiD;AAEjD,MAAa,YAAa,SAAQ,IAAA,uBAAQ,EAAC,8BAAa,EAAE;IACxD,OAAO;IACP,UAAU;CACX,CAAC;CAAG;AAHL,oCAGK"}
+{"version":3,"file":"LoginUser.dto.js","sourceRoot":"","sources":["../../../src/users/DTO/LoginUser.dto.ts"],"names":[],"mappings":";;;;AAAA,6CAA2C;AAC3C,qDAAiD;AAEjD,MAAa,YAAa,SAAQ,IAAA,kBAAQ,EAAC,8BAAa,EAAE;IACxD,OAAO;IACP,UAAU;CACX,CAAC;;;;CAAG;AAHL,oCAGK"}

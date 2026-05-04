@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const users_interceptors_1 = require("../interceptors/users.interceptors");
@@ -21,6 +22,7 @@ const UpdateUser_dto_1 = require("./DTO/UpdateUser.dto");
 const roles_decorator_1 = require("../decorators/roles.decorator");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_enum_1 = require("../common/roles.enum");
+const swagger_1 = require("@nestjs/swagger");
 let UsersController = class UsersController {
     usersService;
     constructor(usersService) {
@@ -46,6 +48,29 @@ let UsersController = class UsersController {
 exports.UsersController = UsersController;
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtiene el listado de todos los usuarios' }),
+    (0, swagger_1.ApiQuery)({
+        name: 'page',
+        required: false,
+        type: String,
+        description: 'Numero de pagina para el paginado',
+    }),
+    (0, swagger_1.ApiQuery)({
+        name: 'limit',
+        required: false,
+        type: String,
+        description: 'Numero de usuarios por pagina',
+    }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Sesión invalida' }),
+    (0, swagger_1.ApiResponse)({
+        status: 403,
+        description: 'Permisos insuficientes para acceder a la ruta',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Acceso al listado de usuarios correctamente',
+    }),
     (0, common_1.HttpCode)(200),
     (0, common_1.UseInterceptors)(users_interceptors_1.UsersInterceptor),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
@@ -58,6 +83,14 @@ __decorate([
 ], UsersController.prototype, "getAllUsers", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Obtiene la información del usuario correspondiente al id proporcionado',
+    }),
+    (0, swagger_1.ApiParam)({ name: 'id', type: String }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Usuario encontrado' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Sesión invalida' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Usuario no encontrado' }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.UseInterceptors)(users_interceptors_1.UsersInterceptor),
     __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
@@ -67,6 +100,25 @@ __decorate([
 ], UsersController.prototype, "getUserById", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Actualiza la información del usuario correspondiente al id',
+    }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'Id del usuario que se desea actualizar',
+        type: 'string',
+    }),
+    (0, swagger_1.ApiBody)({ type: UpdateUser_dto_1.UpdateUserDto }),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Usuario actualizado correctamente',
+    }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Sesión invalida' }),
+    (0, swagger_1.ApiResponse)({
+        status: 404,
+        description: 'Usuario no encontrado o los parametros a actualizar no cumplen con los requisitos',
+    }),
     (0, common_1.UseInterceptors)(users_interceptors_1.UsersInterceptor),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
@@ -77,6 +129,21 @@ __decorate([
 ], UsersController.prototype, "updateUser", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Elimina al usuario correspondiente al id proporcionado',
+    }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'Id del usuario que se desea borrar',
+        type: 'string',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Usuario borrado correctamente',
+    }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Sesión invalida' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Usuario no encontrado' }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
     __metadata("design:type", Function),

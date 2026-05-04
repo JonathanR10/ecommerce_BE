@@ -10,22 +10,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateOrderDto = void 0;
+const openapi = require("@nestjs/swagger");
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateOrderDto {
     userId;
     products;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { userId: { required: true, type: () => String, format: "uuid" }, products: { required: true, type: () => [String], format: "uuid", minItems: 1 } };
+    }
 }
 exports.CreateOrderDto = CreateOrderDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es una string en formato UUID v4',
+    }),
     (0, class_validator_1.IsNotEmpty)({ message: 'El id del usuario es requerido' }),
-    (0, class_validator_1.IsUUID)(4, { message: 'El UUID debe ser v4' }),
+    (0, class_validator_1.IsUUID)('4', { message: 'El UUID debe ser v4' }),
     __metadata("design:type", String)
 ], CreateOrderDto.prototype, "userId", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es un array que contiene la lista de Id de productos del usuario. Cada id deve ser en formato UUID v4',
+    }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ArrayMinSize)(1, {
         message: 'Debe de tener al menos un producto en la lista',
     }),
-    __metadata("design:type", Object)
+    (0, class_validator_1.IsUUID)('4', { each: true, message: 'El UUID de cada producto debe ser v4' }),
+    __metadata("design:type", Array)
 ], CreateOrderDto.prototype, "products", void 0);
 //# sourceMappingURL=createOrders.dto.js.map

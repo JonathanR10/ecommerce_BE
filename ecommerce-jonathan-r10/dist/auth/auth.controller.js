@@ -13,11 +13,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const LoginUser_dto_1 = require("../users/DTO/LoginUser.dto");
 const CreateUser_dto_1 = require("../users/DTO/CreateUser.dto");
 const users_interceptors_1 = require("../interceptors/users.interceptors");
+const swagger_1 = require("@nestjs/swagger");
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
@@ -37,12 +39,18 @@ let AuthController = class AuthController {
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiExcludeEndpoint)(),
+    openapi.ApiResponse({ status: 200, type: String }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
 ], AuthController.prototype, "getAuth", null);
 __decorate([
     (0, common_1.Post)('signup'),
+    (0, swagger_1.ApiOperation)({ summary: 'Ruta para el registro de usuarios nuevos' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Usuario creado correctamente' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Usuario registrado previamente' }),
+    (0, swagger_1.ApiBody)({ type: CreateUser_dto_1.CreateUserDto }),
     (0, common_1.UseInterceptors)(users_interceptors_1.UsersInterceptor),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -51,6 +59,10 @@ __decorate([
 ], AuthController.prototype, "signUp", null);
 __decorate([
     (0, common_1.Post)('signin'),
+    (0, swagger_1.ApiOperation)({ summary: 'Ruta para Iniciar sesión' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Inicio de sesión correcto' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Error con correo / contraseña' }),
+    (0, swagger_1.ApiBody)({ type: LoginUser_dto_1.LoginUserDto }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [LoginUser_dto_1.LoginUserDto]),

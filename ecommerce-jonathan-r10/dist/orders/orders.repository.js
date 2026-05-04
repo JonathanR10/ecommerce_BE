@@ -41,24 +41,24 @@ let OrdersRepository = class OrdersRepository {
             },
         });
         if (!order)
-            return `Order con id= ${id} no encontrada`;
+            throw new common_1.NotFoundException(`Order con id= ${id} no encontrada`);
         return order;
     }
     async addOrder(newOrderData) {
         const { userId, products } = newOrderData;
         const user = await this.ormUsersRepository.findOneBy({ id: userId });
         if (!user)
-            return `Usuario con id=${userId} no encontrado`;
+            throw new common_1.NotFoundException(`Usuario con id=${userId} no encontrado`);
         const order = new orders_entity_1.Orders();
         order.date = new Date();
         order.user = user;
         const newOrder = await this.ormOrdersRepository.save(order);
-        const productsArray = await Promise.all(products.map(async (elem) => {
+        const productsArray = await Promise.all(products.map(async (prodId) => {
             const product = await this.ormProductsRepository.findOneBy({
-                id: elem.id,
+                id: prodId,
             });
             if (!product)
-                return `El producto con id: ${elem.id} no existe`;
+                throw new common_1.NotFoundException(`El producto con id: ${prodId} no existe`);
             await this.ormProductsRepository.update({ id: product.id }, { stock: product.stock - 1 });
             return product;
         }));

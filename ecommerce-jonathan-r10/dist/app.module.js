@@ -50,6 +50,10 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
+                envFilePath: '.env.development',
+            }),
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
                 load: [typeorm_1.typeOrmConfig],
             }),
             typeorm_2.TypeOrmModule.forRootAsync({

@@ -10,9 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Products = void 0;
+const openapi = require("@nestjs/swagger");
 const typeorm_1 = require("typeorm");
 const orderdetails_entity_1 = require("../orders/orderdetails.entity");
 const categories_entity_1 = require("../categories/categories.entity");
+const swagger_1 = require("@nestjs/swagger");
 let Products = class Products {
     id;
     name;
@@ -25,13 +27,26 @@ let Products = class Products {
     order_details;
     createdAt;
     updatedAt;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, description: { required: true, type: () => String }, price: { required: true, type: () => Number }, stock: { required: true, type: () => Number }, imgUrl: { required: true, type: () => String }, category: { required: true, type: () => require("../categories/categories.entity").Categories }, order_details: { required: true, type: () => [require("../orders/orderdetails.entity").OrderDetails] } };
+    }
 };
 exports.Products = Products;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es una string en formato UUID v4',
+    }),
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], Products.prototype, "id", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es valor unico de tipo string',
+        maxLength: 50,
+        nullable: false,
+        example: 'Test Product',
+        uniqueItems: true,
+    }),
     (0, typeorm_1.Column)({
         type: 'varchar',
         length: 50,
@@ -41,6 +56,11 @@ __decorate([
     __metadata("design:type", String)
 ], Products.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es valor de tipo string',
+        nullable: false,
+        example: 'Test Description',
+    }),
     (0, typeorm_1.Column)({
         type: 'text',
         nullable: false,
@@ -48,6 +68,11 @@ __decorate([
     __metadata("design:type", String)
 ], Products.prototype, "description", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es valor de tipo number. Puede contener en total 10 digitos, considerando 2 para los decimales',
+        nullable: false,
+        example: '12345678.95',
+    }),
     (0, typeorm_1.Column)({
         type: 'decimal',
         precision: 10,
@@ -57,6 +82,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Products.prototype, "price", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es valor de tipo number. Indica la cantidad de stock del producto',
+        nullable: false,
+        example: '99',
+    }),
     (0, typeorm_1.Column)({
         type: 'int',
         nullable: false,
@@ -64,6 +94,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Products.prototype, "stock", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es valor de tipo string. Indica la URL de la imagen correspondiente al producto',
+        nullable: false,
+        example: 'https://www.google.com/img/example.jpg',
+    }),
     (0, typeorm_1.Column)({
         type: 'varchar',
         default: 'https://st3.depositphotos.com/1322515/35964/v/600/depositphotos_359648638-stock-illustration-image-available-icon.jpg',
@@ -71,23 +106,32 @@ __decorate([
     __metadata("design:type", String)
 ], Products.prototype, "imgUrl", void 0);
 __decorate([
+    (0, swagger_1.ApiHideProperty)(),
     (0, typeorm_1.Column)({ type: 'boolean', default: true }),
     __metadata("design:type", Boolean)
 ], Products.prototype, "isActive", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Indica la relación del producto con la categoría a la que pertenece.',
+    }),
     (0, typeorm_1.ManyToOne)(() => categories_entity_1.Categories, (categories) => categories.products),
     (0, typeorm_1.JoinColumn)({ name: 'category_id' }),
     __metadata("design:type", categories_entity_1.Categories)
 ], Products.prototype, "category", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Indica la relación de los productos con las ordenes a la que pertenecen.',
+    }),
     (0, typeorm_1.ManyToMany)(() => orderdetails_entity_1.OrderDetails, (orderDetails) => orderDetails.products),
     __metadata("design:type", Array)
 ], Products.prototype, "order_details", void 0);
 __decorate([
+    (0, swagger_1.ApiHideProperty)(),
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Products.prototype, "createdAt", void 0);
 __decorate([
+    (0, swagger_1.ApiHideProperty)(),
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
 ], Products.prototype, "updatedAt", void 0);

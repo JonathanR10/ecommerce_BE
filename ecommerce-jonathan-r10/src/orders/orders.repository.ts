@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Orders } from './orders.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDetails } from './orderdetails.entity';
 import { Users } from 'src/users/users.entity';
 import { Products } from 'src/products/products.entity';
+import { CreateOrderDto } from './dto/createOrders.dto';
 
 @Injectable()
 export class OrdersRepository {
@@ -22,7 +23,7 @@ export class OrdersRepository {
     private readonly ormProductsRepository: Repository<Products>,
   ) {}
 
-  async getOrderById(id: string): Promise<Orders | string> {
+  async getOrderById(id: string): Promise<Orders> {
     const order = await this.ormOrdersRepository.findOne({
       where: { id },
       relations: {
@@ -31,16 +32,18 @@ export class OrdersRepository {
         },
       },
     });
-    if (!order) return `Order con id= ${id} no encontrada`;
+    if (!order)
+      throw new NotFoundException(`Order con id= ${id} no encontrada`);
 
     return order;
   }
 
-  async addOrder(newOrderData: any): Promise<Orders[] | string> {
+  async addOrder(newOrderData: CreateOrderDto): Promise<Orders[]> {
     const { userId, products } = newOrderData;
 
     const user = await this.ormUsersRepository.findOneBy({ id: userId });
-    if (!user) return `Usuario con id=${userId} no encontrado`;
+    if (!user)
+      throw new NotFoundException(`Usuario con id=${userId} no encontrado`);
 
     const order = new Orders();
     order.date = new Date();
@@ -49,12 +52,15 @@ export class OrdersRepository {
     const newOrder = await this.ormOrdersRepository.save(order);
 
     const productsArray = await Promise.all(
-      products.map(async (elem) => {
+      products.map(async (prodId) => {
         const product = await this.ormProductsRepository.findOneBy({
-          id: elem.id,
+          id: prodId,
         });
 
-        if (!product) return `El producto con id: ${elem.id} no existe`;
+        if (!product)
+          throw new NotFoundException(
+            `El producto con id: ${prodId} no existe`,
+          );
 
         await this.ormProductsRepository.update(
           { id: product.id },

@@ -10,21 +10,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderDetails = void 0;
+const openapi = require("@nestjs/swagger");
 const typeorm_1 = require("typeorm");
 const orders_entity_1 = require("./orders.entity");
 const products_entity_1 = require("../products/products.entity");
+const swagger_1 = require("@nestjs/swagger");
 let OrderDetails = class OrderDetails {
     id;
     price;
     order;
     products;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { id: { required: true, type: () => String }, price: { required: true, type: () => Number }, order: { required: true, type: () => require("./orders.entity").Orders }, products: { required: true, type: () => [require("../products/products.entity").Products] } };
+    }
 };
 exports.OrderDetails = OrderDetails;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es una string en formato UUID v4',
+    }),
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], OrderDetails.prototype, "id", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Es valor de tipo number. Puede contener en total 10 digitos, considerando 2 para los decimales',
+        nullable: false,
+        example: '12345678.95',
+    }),
     (0, typeorm_1.Column)({
         type: 'decimal',
         precision: 10,
@@ -34,11 +47,17 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderDetails.prototype, "price", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Indica la relación 1 a 1 con la orden a la que pertenece.',
+    }),
     (0, typeorm_1.OneToOne)(() => orders_entity_1.Orders, (order) => order.orderDetails),
     (0, typeorm_1.JoinColumn)({ name: 'order_id' }),
     __metadata("design:type", orders_entity_1.Orders)
 ], OrderDetails.prototype, "order", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Indica la relación n a n con los productos que corresponden al detalle de la orden.',
+    }),
     (0, typeorm_1.ManyToMany)(() => products_entity_1.Products),
     (0, typeorm_1.JoinTable)({
         name: 'ORDERDETAILS_PRODUCTS',

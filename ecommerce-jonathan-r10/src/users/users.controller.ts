@@ -19,12 +19,43 @@ import { UpdateUserDto } from './DTO/UpdateUser.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/common/roles.enum';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Obtiene el listado de todos los usuarios' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: String,
+    description: 'Numero de pagina para el paginado',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: String,
+    description: 'Numero de usuarios por pagina',
+  })
+  @ApiResponse({ status: 401, description: 'Sesión invalida' })
+  @ApiResponse({
+    status: 403,
+    description: 'Permisos insuficientes para acceder a la ruta',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Acceso al listado de usuarios correctamente',
+  })
   @HttpCode(200)
   @UseInterceptors(UsersInterceptor)
   @Roles(Role.Admin)
@@ -43,6 +74,15 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Obtiene la información del usuario correspondiente al id proporcionado',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiResponse({ status: 200, description: 'Usuario encontrado' })
+  @ApiResponse({ status: 401, description: 'Sesión invalida' })
+  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   @UseGuards(AuthGuard)
   @UseInterceptors(UsersInterceptor)
   getUserById(@Param('id', ParseUUIDPipe) id: string): Promise<Users> {
@@ -50,6 +90,26 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiOperation({
+    summary: 'Actualiza la información del usuario correspondiente al id',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Id del usuario que se desea actualizar',
+    type: 'string',
+  })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'Usuario actualizado correctamente',
+  })
+  @ApiResponse({ status: 401, description: 'Sesión invalida' })
+  @ApiResponse({
+    status: 404,
+    description:
+      'Usuario no encontrado o los parametros a actualizar no cumplen con los requisitos',
+  })
   @UseInterceptors(UsersInterceptor)
   @UseGuards(AuthGuard)
   updateUser(
@@ -60,6 +120,21 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Elimina al usuario correspondiente al id proporcionado',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Id del usuario que se desea borrar',
+    type: 'string',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuario borrado correctamente',
+  })
+  @ApiResponse({ status: 401, description: 'Sesión invalida' })
+  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   @UseGuards(AuthGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.deleteUserService(id);

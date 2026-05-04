@@ -13,10 +13,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const orders_service_1 = require("./orders.service");
 const createOrders_dto_1 = require("./dto/createOrders.dto");
 const auth_guard_1 = require("../auth/guards/auth.guard");
+const swagger_1 = require("@nestjs/swagger");
 let OrdersController = class OrdersController {
     ordersService;
     constructor(ordersService) {
@@ -32,7 +34,24 @@ let OrdersController = class OrdersController {
 exports.OrdersController = OrdersController;
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Ruta para obtener la información de la orden correspondiente al id proporcionado',
+    }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'Id de la orden a encontrar',
+        type: 'string',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Orden retornada correctamente',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 404,
+        description: 'Orden con id proporcionado no encontrada',
+    }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -40,7 +59,20 @@ __decorate([
 ], OrdersController.prototype, "getOrderById", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Ruta para generar una nueva orden para el usuario',
+    }),
+    (0, swagger_1.ApiBody)({ type: createOrders_dto_1.CreateOrderDto }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Orden generada correctamente',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 404,
+        description: 'Usuario o producto no encontrado',
+    }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [createOrders_dto_1.CreateOrderDto]),
