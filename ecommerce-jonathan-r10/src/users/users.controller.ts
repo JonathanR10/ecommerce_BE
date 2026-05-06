@@ -119,7 +119,7 @@ export class UsersController {
     return this.usersService.updateUserService(id, newUserData);
   }
 
-  @Delete(':id')
+  //#region API Documentation
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Elimina al usuario correspondiente al id proporcionado',
@@ -135,6 +135,8 @@ export class UsersController {
   })
   @ApiResponse({ status: 401, description: 'Sesión invalida' })
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+  //#endregion
+  @Delete(':id')
   @UseGuards(AuthGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.deleteUserService(id);

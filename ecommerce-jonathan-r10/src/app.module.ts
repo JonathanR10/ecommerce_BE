@@ -17,7 +17,6 @@ import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { CategoriesService } from './categories/categories.service';
 import { ProductsService } from './products/products.service';
-import { Console } from 'console';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { JwtModule } from '@nestjs/jwt';
 import { environment } from './config/environment';

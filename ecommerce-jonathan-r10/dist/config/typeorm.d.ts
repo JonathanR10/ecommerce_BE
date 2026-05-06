@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 export declare const typeOrmConfig: (() => {
     type: string;
     database: string | undefined;
-    host: string | undefined;
+    host: string;
     port: number;
     username: string | undefined;
     password: string | undefined;
@@ -15,7 +15,7 @@ export declare const typeOrmConfig: (() => {
 }) & import("@nestjs/config").ConfigFactoryKeyHost<{
     type: string;
     database: string | undefined;
-    host: string | undefined;
+    host: string;
     port: number;
     username: string | undefined;
     password: string | undefined;

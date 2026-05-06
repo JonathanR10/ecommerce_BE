@@ -65,7 +65,7 @@ let UsersRepository = class UsersRepository {
             throw new common_1.NotFoundException(`No se encontró al usuario con el id = ${id}`);
         foundUser.isActive = false;
         await this.ormUsersRepository.save(foundUser);
-        return foundUser.id;
+        return `Usuario con ${foundUser.id} ha sido dado de baja`;
     }
 };
 exports.UsersRepository = UsersRepository;

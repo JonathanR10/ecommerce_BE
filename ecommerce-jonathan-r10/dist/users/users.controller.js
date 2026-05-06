@@ -128,7 +128,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
     (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOperation)({
         summary: 'Elimina al usuario correspondiente al id proporcionado',
@@ -144,6 +143,7 @@ __decorate([
     }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Sesión invalida' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Usuario no encontrado' }),
+    (0, common_1.Delete)(':id'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
     __metadata("design:type", Function),

@@ -70,6 +70,6 @@ export class UsersRepository {
     foundUser.isActive = false;
     await this.ormUsersRepository.save(foundUser);
 
-    return foundUser.id;
+    return `Usuario con ${foundUser.id} ha sido dado de baja`;
   }
 }
