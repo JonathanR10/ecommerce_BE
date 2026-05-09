@@ -59,6 +59,10 @@ __decorate([
         description: 'La imagen fue cargada correctamente',
     }),
     (0, swagger_1.ApiResponse)({
+        status: 400,
+        description: 'No cumple con los parametros de tamaño o formato',
+    }),
+    (0, swagger_1.ApiResponse)({
         status: 404,
         description: 'No existe el producto con el ID indicado',
     }),

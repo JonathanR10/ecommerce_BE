@@ -8,7 +8,7 @@ const typeorm_1 = require("typeorm");
 const config = {
     type: 'postgres',
     database: process.env.DB_NAME,
-    host: 'postgresdb',
+    host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
@@ -17,7 +17,7 @@ const config = {
     autoLoadEntities: true,
     logging: false,
     synchronize: true,
-    dropSchema: false,
+    dropSchema: true,
 };
 exports.typeOrmConfig = (0, config_1.registerAs)('typeorm', () => config);
 exports.connectionSource = new typeorm_1.DataSource(config);
