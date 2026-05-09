@@ -54,6 +54,10 @@ export class FileUploadController {
     description: 'La imagen fue cargada correctamente',
   })
   @ApiResponse({
+    status: 400,
+    description: 'No cumple con los parametros de tamaño o formato',
+  })
+  @ApiResponse({
     status: 404,
     description: 'No existe el producto con el ID indicado',
   })
