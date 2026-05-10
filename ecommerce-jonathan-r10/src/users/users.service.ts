@@ -22,4 +22,8 @@ export class UsersService {
   deleteUserService(id: string) {
     return this.usersRepository.deleteuser(id);
   }
+
+  addAllUsers() {
+    return this.usersRepository.addAllUsers();
+  }
 }

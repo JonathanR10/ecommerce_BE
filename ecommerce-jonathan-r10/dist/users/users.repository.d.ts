@@ -11,4 +11,5 @@ export declare class UsersRepository {
     addUser(newUser: CreateUserDto): Promise<Users>;
     updateUser(id: string, userNewData: UpdateUserDto): Promise<Users>;
     deleteuser(id: string): Promise<string>;
+    addAllUsers(): Promise<string>;
 }

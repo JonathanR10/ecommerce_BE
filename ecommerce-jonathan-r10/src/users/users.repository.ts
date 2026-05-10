@@ -4,6 +4,8 @@ import { Users } from './users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './DTO/CreateUser.dto';
 import { UpdateUserDto } from './DTO/UpdateUser.dto';
+import { allUsers } from 'src/utils/usersData';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersRepository {
@@ -71,5 +73,30 @@ export class UsersRepository {
     await this.ormUsersRepository.save(foundUser);
 
     return `Usuario con ${foundUser.id} ha sido dado de baja`;
+  }
+
+  async addAllUsers(): Promise<string> {
+    await Promise.all(
+      allUsers.map(async (elem) => {
+        const newUser = new Users();
+        newUser.name = elem.name;
+        newUser.email = elem.email;
+        newUser.address = elem.address;
+        newUser.phone = elem.phone;
+        newUser.country = elem.country;
+        newUser.city = elem.city;
+        const hashedPassword = await bcrypt.hash(elem.password, 10);
+        newUser.password = hashedPassword;
+
+        await this.ormUsersRepository
+          .createQueryBuilder()
+          .insert()
+          .into(Users)
+          .values(newUser)
+          .orIgnore()
+          .execute();
+      }),
+    );
+    return 'Usuarios agregados';
   }
 }

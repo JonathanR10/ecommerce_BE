@@ -20,6 +20,7 @@ import { ProductsService } from './products/products.service';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { JwtModule } from '@nestjs/jwt';
 import { environment } from './config/environment';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ export class AppModule implements NestModule, OnApplicationBootstrap {
   constructor(
     private readonly categoriesService: CategoriesService,
     private readonly productsService: ProductsService,
+    private readonly userService: UsersService,
   ) {}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
@@ -65,5 +67,7 @@ export class AppModule implements NestModule, OnApplicationBootstrap {
     console.log('Categorias cargadas...');
     await this.productsService.addProducts();
     console.log('Productos cargados...');
+    await this.userService.addAllUsers();
+    console.log('Usuarios demo cargados...');
   }
 }

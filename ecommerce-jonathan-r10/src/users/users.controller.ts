@@ -22,6 +22,7 @@ import { Role } from 'src/common/roles.enum';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiExcludeEndpoint,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -140,5 +141,11 @@ export class UsersController {
   @UseGuards(AuthGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.deleteUserService(id);
+  }
+
+  @ApiExcludeEndpoint()
+  @Get('seeder')
+  addProducts() {
+    return this.usersService.addAllUsers();
   }
 }

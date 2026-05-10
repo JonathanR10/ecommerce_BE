@@ -27,12 +27,15 @@ const products_service_1 = require("./products/products.service");
 const file_upload_module_1 = require("./file-upload/file-upload.module");
 const jwt_1 = require("@nestjs/jwt");
 const environment_1 = require("./config/environment");
+const users_service_1 = require("./users/users.service");
 let AppModule = class AppModule {
     categoriesService;
     productsService;
-    constructor(categoriesService, productsService) {
+    userService;
+    constructor(categoriesService, productsService, userService) {
         this.categoriesService = categoriesService;
         this.productsService = productsService;
+        this.userService = userService;
     }
     configure(consumer) {
         consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes('*');
@@ -42,6 +45,8 @@ let AppModule = class AppModule {
         console.log('Categorias cargadas...');
         await this.productsService.addProducts();
         console.log('Productos cargados...');
+        await this.userService.addAllUsers();
+        console.log('Usuarios demo cargados...');
     }
 };
 exports.AppModule = AppModule;
@@ -76,6 +81,7 @@ exports.AppModule = AppModule = __decorate([
         providers: [app_service_1.AppService],
     }),
     __metadata("design:paramtypes", [categories_service_1.CategoriesService,
-        products_service_1.ProductsService])
+        products_service_1.ProductsService,
+        users_service_1.UsersService])
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

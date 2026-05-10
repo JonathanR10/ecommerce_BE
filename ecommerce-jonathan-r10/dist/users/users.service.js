@@ -29,6 +29,9 @@ let UsersService = class UsersService {
     deleteUserService(id) {
         return this.usersRepository.deleteuser(id);
     }
+    addAllUsers() {
+        return this.usersRepository.addAllUsers();
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

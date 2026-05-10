@@ -17,12 +17,14 @@ export class UsersInterceptor implements NestInterceptor {
       map((data) => {
         if (Array.isArray(data)) {
           return data.map(
-            ({ password, confirmPassword, ...userData }) => userData,
+            ({ password, isAdmin, isActive, confirmPassword, ...userData }) =>
+              userData,
           );
         } else if (typeof data === 'string') {
           return data;
         }
-        const { password, isAdmin, confirmPassword, ...userData } = data;
+        const { password, isAdmin, isActive, confirmPassword, ...userData } =
+          data;
         return userData;
       }),
     );

@@ -44,6 +44,9 @@ let UsersController = class UsersController {
     deleteUser(id) {
         return this.usersService.deleteUserService(id);
     }
+    addProducts() {
+        return this.usersService.addAllUsers();
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -150,6 +153,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUser", null);
+__decorate([
+    (0, swagger_1.ApiExcludeEndpoint)(),
+    (0, common_1.Get)('seeder'),
+    openapi.ApiResponse({ status: 200, type: String }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "addProducts", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])

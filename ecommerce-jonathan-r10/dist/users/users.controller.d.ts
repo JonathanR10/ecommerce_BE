@@ -8,4 +8,5 @@ export declare class UsersController {
     getUserById(id: string): Promise<Users>;
     updateUser(id: string, newUserData: UpdateUserDto): Promise<Users>;
     deleteUser(id: string): Promise<string>;
+    addProducts(): Promise<string>;
 }

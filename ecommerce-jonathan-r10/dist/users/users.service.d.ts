@@ -8,4 +8,5 @@ export declare class UsersService {
     getUserByIdService(id: string): Promise<Users>;
     updateUserService(id: string, newUserData: UpdateUserDto): Promise<Users>;
     deleteUserService(id: string): Promise<string>;
+    addAllUsers(): Promise<string>;
 }
