@@ -1,5 +1,4 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
 import { Orders } from 'src/orders/orders.entity';
 import {
   Column,
