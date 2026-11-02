@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { Products } from './products.entity';
-import { Categories } from 'src/categories/categories.entity';
+import { Categories } from "../categories/categories.entity";
 export declare class ProductsRepository {
     private readonly ormProductsRepository;
     private readonly ormCategoriesRepository;

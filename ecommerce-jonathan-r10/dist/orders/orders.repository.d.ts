@@ -1,8 +1,8 @@
 import { Orders } from './orders.entity';
 import { Repository } from 'typeorm';
 import { OrderDetails } from './orderdetails.entity';
-import { Users } from 'src/users/users.entity';
-import { Products } from 'src/products/products.entity';
+import { Users } from "../users/users.entity";
+import { Products } from "../products/products.entity";
 import { CreateOrderDto } from './dto/createOrders.dto';
 export declare class OrdersRepository {
     private readonly ormOrdersRepository;

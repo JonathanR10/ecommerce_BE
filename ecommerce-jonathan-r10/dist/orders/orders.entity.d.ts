@@ -1,5 +1,5 @@
 import { OrderDetails } from './orderdetails.entity';
-import { Users } from 'src/users/users.entity';
+import { Users } from "../users/users.entity";
 export declare class Orders {
     id: string;
     date: Date;

@@ -1,5 +1,5 @@
 import { FileUploadRepository } from './file-upload.repository';
-import { ProductsService } from 'src/products/products.service';
+import { ProductsService } from "../products/products.service";
 export declare class FileUploadService {
     private readonly fileUploadRepository;
     private readonly productsService;
